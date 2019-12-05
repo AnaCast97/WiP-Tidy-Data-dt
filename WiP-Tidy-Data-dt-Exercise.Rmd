@@ -112,9 +112,63 @@ wip <- fread(here("data", "WB-WiP.csv"),
 ```
 
 # Continue from here...
+```{r}
+wip[, .N, by=.(V65)]
+```
+```{r}
+wip[, c("Indicatoe.Name", "Indicator.Code", "V65"):=NULL]
+setnames(wip, c("Country.Name", "Country.Code"),
+         c("Country","Code"))
+head(names(wip))
+tail(names(wip))
+```
 
+```{r}
+WP <- melt(wip,
+           id.vars = c("Country", "Code"),
+           measure = patterns("^X"),
+           variable.name = "YearC",
+           value.name = c("pctWiP"),
+           na.rm = TRUE)
+WP
+```
 
+```{r}
+WP[, `:=`(Year=as.numeric(gsub("[^[:digit:].]",
+                               "", YearC)),
+          Ratio = (100-pctWiP)/pctWiP)][
+            , YearC:=NULL]
+setcolorder(WP, c("Country", "Code", "Year",
+                 "pctWiP", "Ratio"))
+WP
+          
+```
 
+```{r}
+WP[Country %in% "Portugal"]
+```
+
+```{r}
+library(ggplot2)
+library(magrittr)
+WP[Country %in% "Portugal"] %>%
+ggplot(aes(Year,pctWiP)) +
+  geom_line() + geom_point() +
+  scale_y_continuous(limits=c(0,50))+
+  ylab("% Women in Parliment")
+```
+
+```{r}
+WP[Country %in% c("Portugal", "Sweden", "Spain", "Hungary", "Romania", "Finland", "Germany", "European Union")] %>%
+  ggplot(aes(Year, pctWiP, colour = Country)) +
+  geom_line()+
+  geom_point()+
+  scale_x_continuous(breaks=seq(1990,2020,5))+
+  scale_y_continuous(limits = c(0,50),
+                     breaks=seq(0.50,by=10)) +
+  ggtitle("Women in Parliament: EU Countries")+
+  ylab("% Women in Parliament")
+```
 
 
 
