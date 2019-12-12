@@ -179,6 +179,25 @@ WP[order(-pctWiP), head(.SD, 10)]
 WP[order(Year, -pctWiP), head(.SD, 1), by = Year]
 ```
 
+```{r}
+library(countrycode)
+c1 <- as.data.table(codelist)[, .(continent, wb)]
+setnames(c1, c("continent", "wb"),
+         c("Continent", "Code"))
+cWP <- c1[WP, on="Code"]
+```
+
+```{r}
+cWP[Year %in% c(1990, 2018) & !is.na(Continent)][
+  order(Year, -pctWiP), head(.SD, 1),
+  by = .(Year, Continent)][
+    order(Continent, Year),
+    .(Continent, Year, Country, pctWiP)]
+
+```
+
+
+
 
 
 
