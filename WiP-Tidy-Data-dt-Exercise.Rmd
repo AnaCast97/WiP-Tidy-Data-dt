@@ -196,6 +196,17 @@ cWP[Year %in% c(1990, 2018) & !is.na(Continent)][
 
 ```
 
+```{r}
+dWP <- cWP[
+  order(Country, Year), .SD[c(1, .N)],
+  by = Country][,
+  pctDiff := pctWiP - shift(pctWiP), by=Country][
+  pctDiff<0][
+  order(pctDiff)]
+dWP[!is.na(Continent),
+    .(Country, pctWiP, pctDiff)]
+  
+```
 
 
 
