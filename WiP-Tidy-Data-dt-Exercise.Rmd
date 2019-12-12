@@ -225,6 +225,19 @@ WP[Country %in% dclpct] %>%
 ```
 
 
+```{r}
+cWP[!is.na(Continent),
+    `:=`(RankG = rank(-pctWiP), TotalG = .N),
+    by = .(Year)]
+```
+
+
+```{r}
+cWP[Country=="Portugal",
+    .(Country, Year, pctWiP, Ratio, RankG, TotalG)][
+      order(Year)]
+```
+
 
 
 
