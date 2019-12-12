@@ -170,6 +170,15 @@ WP[Country %in% c("Portugal", "Sweden", "Spain", "Hungary", "Romania", "Finland"
   ylab("% Women in Parliament")
 ```
 
+```{r}
+WP[order(-pctWiP), head(.SD, 10)]
+```
+
+
+```{r}
+WP[order(Year, -pctWiP), head(.SD, 1), by = Year]
+```
+
 
 
 
